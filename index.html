@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌤️ Real-Time Weather App</title>
+  <title>Weather App</title>
   <style>
     * {
       box-sizing: border-box;
@@ -16,88 +16,123 @@
       background: linear-gradient(135deg, #74ebd5, #ACB6E5);
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: space-between;
       color: #333;
     }
 
-    .weather-container {
-      background: rgba(255, 255, 255, 0.9);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      max-width: 350px;
+    header, footer {
       width: 100%;
       text-align: center;
-      transition: all 0.3s ease-in-out;
+      padding: 1rem;
+      background-color: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      font-size: 2rem;
+      color: #0077b6;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      margin: 2rem 0;
+      transition: all 0.3s ease;
     }
 
     .weather-container:hover {
-      transform: scale(1.02);
-    }
-
-    h1 {
-      margin-bottom: 1rem;
-      font-size: 1.8rem;
-      color: #222;
+      transform: scale(1.015);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
 
     #location {
       font-weight: bold;
       margin: 1rem 0 0.5rem;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
+      transition: color 0.3s ease;
+    }
+
+    #location:hover {
+      color: #0077b6;
     }
 
     #temp {
       font-size: 3.5rem;
       color: #0077b6;
-      margin-bottom: 0.5rem;
+      margin: 0.5rem 0;
+      transition: transform 0.3s ease;
+    }
+
+    #temp:hover {
+      transform: scale(1.1);
     }
 
     #desc, #details {
-      font-size: 0.95rem;
+      font-size: 1rem;
       color: #444;
       margin: 0.3rem 0;
     }
 
     .search-group {
       display: flex;
-      margin-top: 1.2rem;
+      margin-top: 1.5rem;
       gap: 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .search-group input {
       flex: 1;
-      padding: 0.6rem;
+      padding: 0.7rem;
       font-size: 1rem;
-      border: 1px solid #aaa;
+      border: 1px solid #ccc;
       border-radius: 8px;
-      outline: none;
-      transition: 0.2s;
+      min-width: 180px;
+      transition: border-color 0.3s ease;
     }
 
     .search-group input:focus {
       border-color: #0077b6;
+      outline: none;
     }
 
     .search-group button {
-      padding: 0.6rem 1rem;
+      padding: 0.7rem 1.2rem;
       background-color: #0077b6;
       color: white;
       border: none;
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background-color 0.3s, transform 0.2s;
     }
 
     .search-group button:hover {
       background-color: #005f8a;
+      transform: translateY(-2px);
     }
 
-    @media (max-width: 400px) {
+    footer p {
+      font-size: 0.9rem;
+      color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .weather-container {
+        padding: 1.5rem;
+      }
+
       .search-group {
         flex-direction: column;
+        align-items: stretch;
       }
 
       .search-group button {
@@ -107,18 +142,29 @@
   </style>
 </head>
 <body>
+
+  <!-- Header -->
+  <header>
+    <h1>🌦️ My Weather App</h1>
+  </header>
+
+  <!-- Weather Content -->
   <div class="weather-container">
-    <h1>🌤️ Real-Time Weather</h1>
-    <div id="location">Fetching location...</div>
+    <div id="location">Getting your location...</div>
     <div id="temp">--°C</div>
-    <div id="desc"></div>
-    <div id="details"></div>
+    <div id="desc">--</div>
+    <div id="details">--</div>
 
     <div class="search-group">
       <input type="text" id="city-input" placeholder="Enter city name" />
       <button id="fetch-btn">Search</button>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Weather App. All rights reserved.</p>
+  </footer>
 
   <script>
     const elements = {
@@ -163,7 +209,7 @@
       if (w) display(w);
     });
 
-    // On load, try user's location
+    // On load, try to get user's location
     window.addEventListener('load', () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async pos => {
@@ -172,7 +218,7 @@
           weather.name = 'Your Location';
           display(weather);
         }, () => {
-          elements.location.textContent = 'Enter city to get weather';
+          elements.location.textContent = 'Enter a city to get weather info';
         });
       }
     });
