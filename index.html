@@ -2,104 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Real‑Time Weather App</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌤️ Real-Time Weather App</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+    }
+
+    .weather-container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      max-width: 350px;
+      width: 100%;
+      text-align: center;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .weather-container:hover {
+      transform: scale(1.02);
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      color: #222;
+    }
+
+    #location {
+      font-weight: bold;
+      margin: 1rem 0 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    #temp {
+      font-size: 3.5rem;
+      color: #0077b6;
+      margin-bottom: 0.5rem;
+    }
+
+    #desc, #details {
+      font-size: 0.95rem;
+      color: #444;
+      margin: 0.3rem 0;
+    }
+
+    .search-group {
+      display: flex;
+      margin-top: 1.2rem;
+      gap: 0.5rem;
+    }
+
+    .search-group input {
+      flex: 1;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #aaa;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .search-group input:focus {
+      border-color: #0077b6;
+    }
+
+    .search-group button {
+      padding: 0.6rem 1rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .search-group button:hover {
+      background-color: #005f8a;
+    }
+
+    @media (max-width: 400px) {
+      .search-group {
+        flex-direction: column;
+      }
+
+      .search-group button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<style>
-body {
-  font-family: sans-serif;
-  background: linear-gradient(135deg, #6eb5ff, #e0f7fa);
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-.weather-container {
-  background: rgba(255,255,255,0.8);
-  padding: 2rem;
-  border-radius: 12px;
-  text-align: center;
-  max-width: 320px;
-}
-#temp {
-  font-size: 3rem;
-  margin: 1rem 0;
-}
-input, button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  margin-top: 1rem;
-}
-button {
-  cursor: pointer;
-}
-</style>
   <div class="weather-container">
-    <h1>Weather Now</h1>
-    <div id="location">Loading…</div>
+    <h1>🌤️ Real-Time Weather</h1>
+    <div id="location">Fetching location...</div>
     <div id="temp">--°C</div>
     <div id="desc"></div>
     <div id="details"></div>
-    <input type="text" id="city-input" placeholder="Enter city" />
-    <button id="fetch-btn">Fetch Weather</button>
+
+    <div class="search-group">
+      <input type="text" id="city-input" placeholder="Enter city name" />
+      <button id="fetch-btn">Search</button>
+    </div>
   </div>
+
   <script>
-const elements = {
-  location: document.getElementById('location'),
-  temp: document.getElementById('temp'),
-  desc: document.getElementById('desc'),
-  details: document.getElementById('details'),
-  cityInput: document.getElementById('city-input'),
-  fetchBtn: document.getElementById('fetch-btn')
-};
+    const elements = {
+      location: document.getElementById('location'),
+      temp: document.getElementById('temp'),
+      desc: document.getElementById('desc'),
+      details: document.getElementById('details'),
+      cityInput: document.getElementById('city-input'),
+      fetchBtn: document.getElementById('fetch-btn')
+    };
 
-async function fetchByCoords(lat, lon) {
-  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.current_weather;
-}
+    async function fetchByCoords(lat, lon) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+      const res = await fetch(url);
+      const data = await res.json();
+      return data.current_weather;
+    }
 
-async function fetchByCity(city) {
-  // Geocode with Open-Meteo geocoding
-  const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
-  const gdata = await geo.json();
-  if (!gdata.results || gdata.results.length === 0) {
-    alert('City not found');
-    return;
-  }
-  const { latitude, longitude, name, country } = gdata.results[0];
-  const cw = await fetchByCoords(latitude, longitude);
-  return { ...cw, name: `${name}, ${country}` };
-}
+    async function fetchByCity(city) {
+      const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
+      const gdata = await geo.json();
+      if (!gdata.results || gdata.results.length === 0) {
+        alert('City not found!');
+        return null;
+      }
+      const { latitude, longitude, name, country } = gdata.results[0];
+      const weather = await fetchByCoords(latitude, longitude);
+      return { ...weather, name: `${name}, ${country}` };
+    }
 
-function display(weather) {
-  elements.location.textContent = weather.name;
-  elements.temp.textContent = weather.temperature + '°C';
-  elements.desc.textContent = `Wind: ${weather.windspeed} km/h, Direction: ${weather.winddirection}°`;
-  elements.details.textContent = `Time: ${weather.time}`;
-}
+    function display(weather) {
+      elements.location.textContent = weather.name || 'Your Location';
+      elements.temp.textContent = weather.temperature + '°C';
+      elements.desc.textContent = `Wind: ${weather.windspeed} km/h`;
+      elements.details.textContent = `Time: ${weather.time}`;
+    }
 
-elements.fetchBtn.addEventListener('click', async () => {
-  const w = await fetchByCity(elements.cityInput.value);
-  if (w) display(w);
-});
-
-window.addEventListener('load', () => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async pos => {
-      const w = await fetchByCoords(pos.coords.latitude, pos.coords.longitude);
-      w.name = 'Your Location';
-      display(w);
-    }, () => {
-      elements.location.textContent = 'Enable location or use search.';
+    elements.fetchBtn.addEventListener('click', async () => {
+      const city = elements.cityInput.value.trim();
+      if (!city) return alert('Please enter a city name.');
+      const w = await fetchByCity(city);
+      if (w) display(w);
     });
-  }
-});
 
-</script>
+    // On load, try user's location
+    window.addEventListener('load', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async pos => {
+          const { latitude, longitude } = pos.coords;
+          const weather = await fetchByCoords(latitude, longitude);
+          weather.name = 'Your Location';
+          display(weather);
+        }, () => {
+          elements.location.textContent = 'Enter city to get weather';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
