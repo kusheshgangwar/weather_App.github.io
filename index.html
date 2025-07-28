@@ -7,13 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       color: #333;
     }
 
@@ -32,12 +32,13 @@
 
     .container {
       background: white;
-      margin: 2rem;
+      margin: 2rem auto;
       padding: 2rem;
       border-radius: 16px;
       box-shadow: 0 8px 30px rgba(0,0,0,0.1);
       max-width: 900px;
       width: 95%;
+      flex: 1;
       transition: 0.3s ease-in-out;
     }
 
@@ -177,12 +178,12 @@
     const fetchBtn = document.getElementById('fetch-btn');
 
     async function fetchForecast(lat, lon) {
-      const res = await fetch(https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=16&timezone=auto);
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=16&timezone=auto`);
       return await res.json();
     }
 
     async function fetchByCity(city) {
-      const geoRes = await fetch(https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)});
+      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
       const geoData = await geoRes.json();
       if (!geoData.results?.length) {
         alert("City not found!");
@@ -190,7 +191,7 @@
       }
       const { latitude, longitude, name, country } = geoData.results[0];
       const data = await fetchForecast(latitude, longitude);
-      return { data, label: ${name}, ${country} };
+      return { data, label: `${name}, ${country}` };
     }
 
     function getWeatherIcon(code) {
@@ -208,9 +209,9 @@
     function renderUI(data, label) {
       const cw = data.current_weather;
       locationEl.textContent = label;
-      tempEl.textContent = ${cw.temperature}°C;
-      descEl.textContent = Wind: ${cw.windspeed} km/h;
-      detailsEl.textContent = Time: ${cw.time};
+      tempEl.textContent = `${cw.temperature}°C`;
+      descEl.textContent = `Wind: ${cw.windspeed} km/h`;
+      detailsEl.textContent = `Time: ${cw.time}`;
 
       forecastEl.innerHTML = '';
       data.daily.time.forEach((date, i) => {
@@ -222,11 +223,11 @@
 
         const div = document.createElement('div');
         div.className = 'day';
-        div.innerHTML = 
+        div.innerHTML = `
           <strong>${day}</strong>
           <div class="icon">${icon}</div>
           <div>${max}° / ${min}°C</div>
-        ;
+        `;
         forecastEl.appendChild(div);
       });
     }
@@ -251,4 +252,4 @@
     });
   </script>
 </body>
-</html> 
+</html>
