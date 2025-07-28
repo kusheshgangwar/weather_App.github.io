@@ -17,7 +17,7 @@
       color: #333;
     }
 
-    header, footer {
+    header {
       text-align: center;
       padding: 1.5rem;
       background: rgba(255,255,255,0.8);
@@ -125,11 +125,6 @@
       margin: 0.5rem 0;
     }
 
-    footer p {
-      font-size: 0.9rem;
-      color: #444;
-    }
-
     @media (max-width: 500px) {
       .current {
         flex-direction: column;
@@ -162,10 +157,6 @@
 
     <div class="forecast" id="forecast"></div>
   </div>
-
-  <footer>
-    <p>&copy; 2025 Beautiful Weather App. Made with developerwala💻</p>
-  </footer>
 
   <script>
     const locationEl = document.getElementById('location');
