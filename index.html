@@ -5,166 +5,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Weather App</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; margin:0; padding:0;}
     body {
       font-family: 'Segoe UI', sans-serif;
       background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      color: #333;
+      display: flex; flex-direction: column;
+      min-height: 100vh; color: #333;
     }
-
     header, footer {
-      width: 100%;
-      text-align: center;
-      padding: 1rem;
-      background-color: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.8); text-align:center;
+      padding: 1rem; backdrop-filter: blur(10px);
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    header h1 {
-      font-size: 2rem;
-      color: #0077b6;
-    }
-
+    header h1 { color: #0077b6; font-size:2rem;}
     .weather-container {
-      background: rgba(255, 255, 255, 0.95);
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      margin: 2rem 0;
-      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.95); margin:1rem auto;
+      padding:2rem; radius:16px; max-width:600px;
+      border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.15);
+      transition: transform 0.3s;
     }
-
     .weather-container:hover {
-      transform: scale(1.015);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      transform: scale(1.01);
     }
-
-    #location {
-      font-weight: bold;
-      margin: 1rem 0 0.5rem;
-      font-size: 1.3rem;
-      transition: color 0.3s ease;
-    }
-
-    #location:hover {
-      color: #0077b6;
-    }
-
-    #temp {
-      font-size: 3.5rem;
-      color: #0077b6;
-      margin: 0.5rem 0;
-      transition: transform 0.3s ease;
-    }
-
-    #temp:hover {
-      transform: scale(1.1);
-    }
-
-    #desc, #details {
-      font-size: 1rem;
-      color: #444;
-      margin: 0.3rem 0;
-    }
-
-    .search-group {
-      display: flex;
-      margin-top: 1.5rem;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
+    #location { font-size:1.3rem; font-weight:bold; margin-bottom:0.5rem; transition: color 0.3s;}
+    #location:hover { color:#0077b6;}
+    #temp { font-size:3rem; color:#0077b6; transition: transform 0.3s;}
+    #temp:hover { transform: scale(1.1);}
+    #desc, #details { margin:0.3rem 0; color:#444;}
+    .search-group { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; justify-content:center;}
     .search-group input {
-      flex: 1;
-      padding: 0.7rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      min-width: 180px;
-      transition: border-color 0.3s ease;
+      flex:1; min-width:200px; padding:0.7rem;
+      border:1px solid #ccc; border-radius:8px;
+      transition:border-color 0.3s;
     }
-
-    .search-group input:focus {
-      border-color: #0077b6;
-      outline: none;
-    }
-
+    .search-group input:focus { border-color:#0077b6; outline:none;}
     .search-group button {
-      padding: 0.7rem 1.2rem;
-      background-color: #0077b6;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
+      padding:0.7rem 1.2rem; background:#0077b6;
+      color:#fff; border:none; border-radius:8px;
+      font-weight:bold; cursor:pointer;
+      transition: background 0.3s, transform 0.2s;
     }
-
-    .search-group button:hover {
-      background-color: #005f8a;
-      transform: translateY(-2px);
+    .search-group button:hover { background:#005f8a; transform: translateY(-2px);}
+    .forecast-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
+      gap:0.5rem; margin-top:1.5rem;
     }
-
-    footer p {
-      font-size: 0.9rem;
-      color: #333;
+    .day-card {
+      background:#e0f7fa; padding:0.5rem;
+      border-radius:8px; text-align:center;
+      transition: background 0.3s;
     }
-
-    @media (max-width: 480px) {
-      .weather-container {
-        padding: 1.5rem;
-      }
-
-      .search-group {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .search-group button {
-        width: 100%;
-      }
+    .day-card:hover {
+      background:#b2ebf2;
     }
+    .day-card strong { display:block; margin-bottom:0.3rem;}
+    footer p { font-size:0.9rem;}
   </style>
 </head>
 <body>
-
-  <!-- Header -->
-  <header>
-    <h1>🌦️ My Weather App</h1>
-  </header>
-
-  <!-- Weather Content -->
+  <header><h1>🌦️ Advanced Weather App</h1></header>
   <div class="weather-container">
-    <div id="location">Getting your location...</div>
+    <div id="location">Loading location…</div>
     <div id="temp">--°C</div>
     <div id="desc">--</div>
     <div id="details">--</div>
-
     <div class="search-group">
       <input type="text" id="city-input" placeholder="Enter city name" />
       <button id="fetch-btn">Search</button>
     </div>
+    <div id="forecast" class="forecast-grid"></div>
   </div>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Weather App. All rights reserved.</p>
-  </footer>
+  <footer><p>&copy; 2025 Advanced Weather App</p></footer>
 
   <script>
     const elements = {
@@ -173,53 +84,58 @@
       desc: document.getElementById('desc'),
       details: document.getElementById('details'),
       cityInput: document.getElementById('city-input'),
-      fetchBtn: document.getElementById('fetch-btn')
+      fetchBtn: document.getElementById('fetch-btn'),
+      forecast: document.getElementById('forecast')
     };
 
-    async function fetchByCoords(lat, lon) {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    async function fetchForecast(lat, lon) {
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=16&timezone=auto`;
       const res = await fetch(url);
-      const data = await res.json();
-      return data.current_weather;
+      return await res.json();
     }
 
     async function fetchByCity(city) {
       const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
-      const gdata = await geo.json();
-      if (!gdata.results || gdata.results.length === 0) {
-        alert('City not found!');
-        return null;
-      }
-      const { latitude, longitude, name, country } = gdata.results[0];
-      const weather = await fetchByCoords(latitude, longitude);
-      return { ...weather, name: `${name}, ${country}` };
+      const g = await geo.json();
+      if (!g.results?.length) { alert('City not found!'); return null;}
+      const { latitude, longitude, name, country } = g.results[0];
+      const data = await fetchForecast(latitude, longitude);
+      return { data, label: `${name}, ${country}` };
     }
 
-    function display(weather) {
-      elements.location.textContent = weather.name || 'Your Location';
-      elements.temp.textContent = weather.temperature + '°C';
-      elements.desc.textContent = `Wind: ${weather.windspeed} km/h`;
-      elements.details.textContent = `Time: ${weather.time}`;
+    function updateUI(data, label) {
+      const cw = data.current_weather;
+      elements.location.textContent = label;
+      elements.temp.textContent = cw.temperature + '°C';
+      elements.desc.textContent = `Wind: ${cw.windspeed} km/h`;
+      elements.details.textContent = `As of: ${cw.time}`;
+      // daily forecast:
+      elements.forecast.innerHTML = '';
+      data.daily.time.forEach((d, i) => {
+        const max = data.daily.temperature_2m_max[i];
+        const min = data.daily.temperature_2m_min[i];
+        const card = document.createElement('div');
+        card.className = 'day-card';
+        card.innerHTML = `<strong>${new Date(d).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'})}</strong>
+          <div>🌡️ ${max} / ${min}°C</div>`;
+        elements.forecast.appendChild(card);
+      });
     }
 
     elements.fetchBtn.addEventListener('click', async () => {
       const city = elements.cityInput.value.trim();
-      if (!city) return alert('Please enter a city name.');
-      const w = await fetchByCity(city);
-      if (w) display(w);
+      if (!city) return alert('Enter city name');
+      const r = await fetchByCity(city);
+      if (r) updateUI(r.data, r.label);
     });
 
-    // On load, try to get user's location
     window.addEventListener('load', () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude } = pos.coords;
-          const weather = await fetchByCoords(latitude, longitude);
-          weather.name = 'Your Location';
-          display(weather);
-        }, () => {
-          elements.location.textContent = 'Enter a city to get weather info';
-        });
+          const r = await fetchForecast(latitude, longitude);
+          updateUI(r, 'Your Location'); // label override
+        }, () => { elements.location.textContent = 'Enter city to begin'; });
       }
     });
   </script>
