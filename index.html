@@ -8,10 +8,20 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    body {
+    body, html {
+      height: 100%;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+      background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKojoIzhI_jmu0RbY4_aFV1_m2C5HyhvM0AQ&s');
+      background-size: cover;
+    backdrop-filter: blur(0px) brightness(5.0);
+    }
+
+    #background-container {
       min-height: 100vh;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      transition: background-image 0.5s ease-in-out;
       display: flex;
       flex-direction: column;
       color: #333;
@@ -140,33 +150,35 @@
   </style>
 </head>
 <body>
+  <div id="background-container">
+    <header>
+      <h1>🌤️Weather App</h1>
 
-  <header>
-    <h1>🌤️Weather App</h1>
-  </header>
+    </header>
 
-  <div class="container">
-    <div class="location" id="location">Loading location...</div>
+    <div class="container">
+      <div class="location" id="location">Loading location...</div>
 
-    <div class="current">
-      <div class="temp" id="temp">--°C</div>
-      <div>
-        <div class="info" id="desc">--</div>
-        <div class="info" id="details">--</div>
+      <div class="current">
+        <div class="temp" id="temp">--°C</div>
+        <div>
+          <div class="info" id="desc">--</div>
+          <div class="info" id="details">--</div>
+        </div>
       </div>
+
+      <div class="search">
+        <input type="text" id="city-input" placeholder="Enter city name">
+        <button id="fetch-btn">Search</button>
+      </div>
+
+      <div class="forecast" id="forecast"></div>
     </div>
 
-    <div class="search">
-      <input type="text" id="city-input" placeholder="Enter city name">
-      <button id="fetch-btn">Search</button>
-    </div>
-
-    <div class="forecast" id="forecast"></div>
+    <footer>
+      <p>&copy; 2025 Beautiful Weather App. Made with developerwala💻</p>
+    </footer>
   </div>
-
-  <footer>
-    <p>&copy; 2025 Beautiful Weather App. Made with developerwala💻</p>
-  </footer>
 
   <script>
     const locationEl = document.getElementById('location');
@@ -206,6 +218,18 @@
       return "❓";
     }
 
+    function getBackgroundImage(code) {
+      if ([0].includes(code)) return 'url(https://source.unsplash.com/1600x900/?sunny)';
+      if ([1, 2].includes(code)) return 'url(https://source.unsplash.com/1600x900/?partly-cloudy)';
+      if ([3].includes(code)) return 'url(https://source.unsplash.com/1600x900/?cloudy)';
+      if ([45, 48].includes(code)) return 'url(https://source.unsplash.com/1600x900/?fog)';
+      if ([51, 53, 55].includes(code)) return 'url(https://source.unsplash.com/1600x900/?drizzle)';
+      if ([61, 63, 65].includes(code)) return 'url(https://source.unsplash.com/1600x900/?rain)';
+      if ([71, 73, 75, 77].includes(code)) return 'url(https://source.unsplash.com/1600x900/?snow)';
+      if ([95, 96, 99].includes(code)) return 'url(https://source.unsplash.com/1600x900/?storm)';
+      return 'url(https://source.unsplash.com/1600x900/?weather)';
+    }
+
     function renderUI(data, label) {
       const cw = data.current_weather;
       locationEl.textContent = label;
@@ -213,13 +237,20 @@
       descEl.textContent = `Wind: ${cw.windspeed} km/h`;
       detailsEl.textContent = `Time: ${cw.time}`;
 
+      // Set background image based on weather code
+      const backgroundContainer = document.getElementById('background-container');
+      backgroundContainer.style.backgroundImage = getBackgroundImage(cw.weathercode);
+
+      // Render forecast
       forecastEl.innerHTML = '';
       data.daily.time.forEach((date, i) => {
         const max = data.daily.temperature_2m_max[i];
         const min = data.daily.temperature_2m_min[i];
         const code = data.daily.weathercode[i];
         const icon = getWeatherIcon(code);
-        const day = new Date(date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+        const day = new Date(date).toLocaleDateString(undefined, {
+          weekday: 'short', month: 'short', day: 'numeric'
+        });
 
         const div = document.createElement('div');
         div.className = 'day';
