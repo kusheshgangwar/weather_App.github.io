@@ -3,139 +3,250 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weather App</title>
+  <title>🌤️Weather App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin:0; padding:0;}
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
-      display: flex; flex-direction: column;
-      min-height: 100vh; color: #333;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(120deg, #a1c4fd, #c2e9fb);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
     }
+
     header, footer {
-      background: rgba(255,255,255,0.8); text-align:center;
-      padding: 1rem; backdrop-filter: blur(10px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.8);
+      width: 100%;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.05);
     }
-    header h1 { color: #0077b6; font-size:2rem;}
-    .weather-container {
-      background: rgba(255,255,255,0.95); margin:1rem auto;
-      padding:2rem; radius:16px; max-width:600px;
-      border-radius:16px; box-shadow:0 8px 24px rgba(0,0,0,0.15);
-      transition: transform 0.3s;
+
+    header h1 {
+      font-size: 2.2rem;
+      color: #0077b6;
     }
-    .weather-container:hover {
-      transform: scale(1.01);
+
+    .container {
+      background: white;
+      margin: 2rem;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      max-width: 900px;
+      width: 95%;
+      transition: 0.3s ease-in-out;
     }
-    #location { font-size:1.3rem; font-weight:bold; margin-bottom:0.5rem; transition: color 0.3s;}
-    #location:hover { color:#0077b6;}
-    #temp { font-size:3rem; color:#0077b6; transition: transform 0.3s;}
-    #temp:hover { transform: scale(1.1);}
-    #desc, #details { margin:0.3rem 0; color:#444;}
-    .search-group { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem; justify-content:center;}
-    .search-group input {
-      flex:1; min-width:200px; padding:0.7rem;
-      border:1px solid #ccc; border-radius:8px;
-      transition:border-color 0.3s;
+
+    .location {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #0077b6;
     }
-    .search-group input:focus { border-color:#0077b6; outline:none;}
-    .search-group button {
-      padding:0.7rem 1.2rem; background:#0077b6;
-      color:#fff; border:none; border-radius:8px;
-      font-weight:bold; cursor:pointer;
-      transition: background 0.3s, transform 0.2s;
+
+    .current {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
     }
-    .search-group button:hover { background:#005f8a; transform: translateY(-2px);}
-    .forecast-grid {
-      display: grid; grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
-      gap:0.5rem; margin-top:1.5rem;
+
+    .temp {
+      font-size: 3rem;
+      font-weight: bold;
+      color: #023e8a;
     }
-    .day-card {
-      background:#e0f7fa; padding:0.5rem;
-      border-radius:8px; text-align:center;
-      transition: background 0.3s;
+
+    .info {
+      font-size: 1rem;
+      color: #444;
     }
-    .day-card:hover {
-      background:#b2ebf2;
+
+    .search {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
     }
-    .day-card strong { display:block; margin-bottom:0.3rem;}
-    footer p { font-size:0.9rem;}
+
+    .search input {
+      padding: 0.7rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      flex: 1;
+      font-size: 1rem;
+    }
+
+    .search button {
+      padding: 0.7rem 1.2rem;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .search button:hover {
+      background-color: #005f8a;
+    }
+
+    .forecast {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+    }
+
+    .day {
+      background: #e0f7fa;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .day:hover {
+      background: #b2ebf2;
+    }
+
+    .day strong {
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #005f73;
+    }
+
+    .icon {
+      font-size: 1.8rem;
+      margin: 0.5rem 0;
+    }
+
+    footer p {
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    @media (max-width: 500px) {
+      .current {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-  <header><h1>🌦️ Advanced Weather App</h1></header>
-  <div class="weather-container">
-    <div id="location">Loading location…</div>
-    <div id="temp">--°C</div>
-    <div id="desc">--</div>
-    <div id="details">--</div>
-    <div class="search-group">
-      <input type="text" id="city-input" placeholder="Enter city name" />
+
+  <header>
+    <h1>🌤️Weather App</h1>
+  </header>
+
+  <div class="container">
+    <div class="location" id="location">Loading location...</div>
+
+    <div class="current">
+      <div class="temp" id="temp">--°C</div>
+      <div>
+        <div class="info" id="desc">--</div>
+        <div class="info" id="details">--</div>
+      </div>
+    </div>
+
+    <div class="search">
+      <input type="text" id="city-input" placeholder="Enter city name">
       <button id="fetch-btn">Search</button>
     </div>
-    <div id="forecast" class="forecast-grid"></div>
+
+    <div class="forecast" id="forecast"></div>
   </div>
-  <footer><p>&copy; 2025 Advanced Weather App</p></footer>
+
+  <footer>
+    <p>&copy; 2025 Weather App. Made with developerwala</p>
+  </footer>
 
   <script>
-    const elements = {
-      location: document.getElementById('location'),
-      temp: document.getElementById('temp'),
-      desc: document.getElementById('desc'),
-      details: document.getElementById('details'),
-      cityInput: document.getElementById('city-input'),
-      fetchBtn: document.getElementById('fetch-btn'),
-      forecast: document.getElementById('forecast')
-    };
+    const locationEl = document.getElementById('location');
+    const tempEl = document.getElementById('temp');
+    const descEl = document.getElementById('desc');
+    const detailsEl = document.getElementById('details');
+    const forecastEl = document.getElementById('forecast');
+    const cityInput = document.getElementById('city-input');
+    const fetchBtn = document.getElementById('fetch-btn');
 
     async function fetchForecast(lat, lon) {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=16&timezone=auto`;
-      const res = await fetch(url);
+      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&forecast_days=16&timezone=auto`);
       return await res.json();
     }
 
     async function fetchByCity(city) {
-      const geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
-      const g = await geo.json();
-      if (!g.results?.length) { alert('City not found!'); return null;}
-      const { latitude, longitude, name, country } = g.results[0];
+      const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`);
+      const geoData = await geoRes.json();
+      if (!geoData.results?.length) {
+        alert("City not found!");
+        return null;
+      }
+      const { latitude, longitude, name, country } = geoData.results[0];
       const data = await fetchForecast(latitude, longitude);
       return { data, label: `${name}, ${country}` };
     }
 
-    function updateUI(data, label) {
+    function getWeatherIcon(code) {
+      if ([0].includes(code)) return "☀️";
+      if ([1,2].includes(code)) return "⛅";
+      if ([3].includes(code)) return "☁️";
+      if ([45,48].includes(code)) return "🌫️";
+      if ([51,53,55].includes(code)) return "🌦️";
+      if ([61,63,65].includes(code)) return "🌧️";
+      if ([71,73,75,77].includes(code)) return "❄️";
+      if ([95,96,99].includes(code)) return "⛈️";
+      return "❓";
+    }
+
+    function renderUI(data, label) {
       const cw = data.current_weather;
-      elements.location.textContent = label;
-      elements.temp.textContent = cw.temperature + '°C';
-      elements.desc.textContent = `Wind: ${cw.windspeed} km/h`;
-      elements.details.textContent = `As of: ${cw.time}`;
-      // daily forecast:
-      elements.forecast.innerHTML = '';
-      data.daily.time.forEach((d, i) => {
+      locationEl.textContent = label;
+      tempEl.textContent = `${cw.temperature}°C`;
+      descEl.textContent = `Wind: ${cw.windspeed} km/h`;
+      detailsEl.textContent = `Time: ${cw.time}`;
+
+      forecastEl.innerHTML = '';
+      data.daily.time.forEach((date, i) => {
         const max = data.daily.temperature_2m_max[i];
         const min = data.daily.temperature_2m_min[i];
-        const card = document.createElement('div');
-        card.className = 'day-card';
-        card.innerHTML = `<strong>${new Date(d).toLocaleDateString(undefined, {weekday:'short', month:'short', day:'numeric'})}</strong>
-          <div>🌡️ ${max} / ${min}°C</div>`;
-        elements.forecast.appendChild(card);
+        const code = data.daily.weathercode[i];
+        const icon = getWeatherIcon(code);
+        const day = new Date(date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+
+        const div = document.createElement('div');
+        div.className = 'day';
+        div.innerHTML = `
+          <strong>${day}</strong>
+          <div class="icon">${icon}</div>
+          <div>${max}° / ${min}°C</div>
+        `;
+        forecastEl.appendChild(div);
       });
     }
 
-    elements.fetchBtn.addEventListener('click', async () => {
-      const city = elements.cityInput.value.trim();
-      if (!city) return alert('Enter city name');
-      const r = await fetchByCity(city);
-      if (r) updateUI(r.data, r.label);
+    fetchBtn.addEventListener('click', async () => {
+      const city = cityInput.value.trim();
+      if (!city) return alert('Please enter a city');
+      const res = await fetchByCity(city);
+      if (res) renderUI(res.data, res.label);
     });
 
     window.addEventListener('load', () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async pos => {
           const { latitude, longitude } = pos.coords;
-          const r = await fetchForecast(latitude, longitude);
-          updateUI(r, 'Your Location'); // label override
-        }, () => { elements.location.textContent = 'Enter city to begin'; });
+          const data = await fetchForecast(latitude, longitude);
+          renderUI(data, "Your Location");
+        }, () => {
+          locationEl.textContent = "Enter city to view weather";
+        });
       }
     });
   </script>
